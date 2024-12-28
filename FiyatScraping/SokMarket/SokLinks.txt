@@ -1,0 +1,16 @@
+https://www.sokmarket.com.tr/api/v1/search?cat=20&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=160&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=460&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=890&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=1250&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=31102&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=1550&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=1770&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20376&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20505&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20395&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20634&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20647&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20875&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+https://www.sokmarket.com.tr/api/v1/search?cat=20880&sort=SCORE_DESC&page=0&size=20&pgt=CATEGORY_LISTING
+

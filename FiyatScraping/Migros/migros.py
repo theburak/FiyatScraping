@@ -3,6 +3,7 @@ import cloudscraper
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor,as_completed
 
+urunid=[]
 urunad=[]
 urunfiyat=[]
 urunanakategori=[]
@@ -38,6 +39,7 @@ with ThreadPoolExecutor(max_workers=5) as executor:
     for future in as_completed(futures):
         info=future.result()
         for urun in info:
+            urunid.append(urun.get("id"))
             urunad.append(urun.get("name"))
             urunfiyat.append(int(urun.get("salePrice"))/100)
             kategoriler=urun.get("categoriesForSorting")
@@ -47,7 +49,7 @@ with ThreadPoolExecutor(max_workers=5) as executor:
 bugun=datetime.today()
 tarih=bugun.strftime("%d-%m-%Y")
 
-veri=pd.DataFrame({"Tarih":tarih,"Ürün Ad":urunad,"Fiyat":urunfiyat,
+veri=pd.DataFrame({"Tarih":tarih,"ID":urunid,"Ürün Ad":urunad,"Fiyat":urunfiyat,
                    "Ürün Ana Kategori":urunanakategori,"Ürün Alt Kategori":urunaltketegori})
 veri=veri[~veri["Ürün Ad"].duplicated(keep=False)]
 veri.reset_index(inplace=True,drop=True)

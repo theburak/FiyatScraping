@@ -4,6 +4,7 @@ from urllib.parse import urlparse,parse_qs,urlencode
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor,as_completed
 
+urunid=[]
 urunad=[]
 urunfiyat=[]
 urunanakategori=[]
@@ -22,6 +23,7 @@ def sayfasayısı(url):
     return r.json()["page"]["totalPages"]
 
 def veri_cek(url):
+    local_urunid=[]
     local_urunad=[]
     local_urunfiyat=[]
     local_urunanakategori=[]
@@ -32,12 +34,13 @@ def veri_cek(url):
     item_sayisi=len(r.json().get("results"))
     
     for k in range(0,item_sayisi):
+        local_urunid.append(r.json()["results"][k]["product"]["id"])
         local_urunad.append(r.json()["results"][k]["product"]["name"])
         local_urunfiyat.append(r.json()["results"][k]["prices"]["original"]["value"])
         local_urunanakategori.append(r.json()["results"][k]["sku"]["breadCrumbs"][1]["label"])
         local_urunaltketegori.append(r.json()["results"][k]["sku"]["breadCrumbs"][2]["label"])
     
-    return local_urunad,local_urunfiyat,local_urunanakategori,local_urunaltketegori
+    return local_urunid,local_urunad,local_urunfiyat,local_urunanakategori,local_urunaltketegori
 
 with open("SokMarket/SokLinks.txt","r",encoding="utf-8") as dosya:
     linkler=dosya.readlines()
@@ -56,7 +59,8 @@ with ThreadPoolExecutor() as executor:
             futures.append(executor.submit(veri_cek,url))
     
     for future in as_completed(futures):
-        local_urunad, local_urunfiyat,local_urunanakategori,local_urunaltketegori=future.result()
+        local_urunid,local_urunad, local_urunfiyat,local_urunanakategori,local_urunaltketegori=future.result()
+        urunid.extend(local_urunid)
         urunad.extend(local_urunad)
         urunfiyat.extend(local_urunfiyat)
         urunanakategori.extend(local_urunanakategori)
@@ -65,7 +69,7 @@ with ThreadPoolExecutor() as executor:
 bugun=datetime.today()
 tarih=bugun.strftime("%d-%m-%Y")
 
-veri=pd.DataFrame({"Tarih":tarih,"Ürün Ad":urunad,"Fiyat":urunfiyat,"Ürün Ana Kategori":urunanakategori,
+veri=pd.DataFrame({"Tarih":tarih,"ID":urunid,"Ürün Ad":urunad,"Fiyat":urunfiyat,"Ürün Ana Kategori":urunanakategori,
     "Ürün Alt Kategori":urunaltketegori})
 
 veri=veri[~veri["Ürün Ad"].duplicated(keep=False)]

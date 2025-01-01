@@ -3,6 +3,8 @@ import cloudscraper
 from urllib.parse import urlparse,parse_qs,urlencode
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor,as_completed
+import os
+
 
 urunid=[]
 urunad=[]
@@ -59,7 +61,7 @@ with ThreadPoolExecutor() as executor:
             futures.append(executor.submit(veri_cek,url))
     
     for future in as_completed(futures):
-        local_urunid,local_urunad, local_urunfiyat,local_urunanakategori,local_urunaltketegori=future.result()
+        local_urunid,local_urunad,local_urunfiyat,local_urunanakategori,local_urunaltketegori=future.result()
         urunid.extend(local_urunid)
         urunad.extend(local_urunad)
         urunfiyat.extend(local_urunfiyat)
@@ -73,5 +75,10 @@ veri=pd.DataFrame({"Tarih":tarih,"ID":urunid,"Ürün Ad":urunad,"Fiyat":urunfiya
     "Ürün Alt Kategori":urunaltketegori})
 
 veri=veri[~veri["Ürün Ad"].duplicated(keep=False)]
-veri.reset_index(inplace=True, drop=True)
-veri.to_excel("SokMarket/SokFiyat.xlsx", index=False)
+veri.reset_index(inplace=True,drop=True)
+
+klasoryolu=f"Fiyatlar/{tarih}"
+os.makedirs(klasoryolu,exist_ok=True)
+
+dosyayolu=os.path.join(klasoryolu,"SokFiyat.xlsx")
+veri.to_excel(dosyayolu,index=False)

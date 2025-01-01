@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from datetime import datetime
+import os
 
 chrome_options=Options()
 chrome_options.add_argument("--headless")
@@ -84,4 +85,9 @@ veri=pd.DataFrame({"Tarih":tarih,"ID":urunid,"Ürün Ad":urunad,"Fiyat":urunfiya
 veri=veri[~veri["Ürün Ad"].duplicated(keep=False)]
 veri.reset_index(inplace=True,drop=True)
 veri["Fiyat"]=veri["Fiyat"].apply(lambda x: "{:.2f}".format(float(x)).replace('.', ','))
-veri.to_excel("Carrefoursa/CarrefoursaFiyat.xlsx",index=False)
+
+klasoryolu=f"Fiyatlar/{tarih}"
+os.makedirs(klasoryolu,exist_ok=True)
+
+dosyayolu=os.path.join(klasoryolu,"CarrefoursaFiyat.xlsx")
+veri.to_excel(dosyayolu,index=False)

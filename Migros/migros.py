@@ -2,6 +2,8 @@ import pandas as pd
 import cloudscraper
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor,as_completed
+import os
+
 
 urunid=[]
 urunad=[]
@@ -53,4 +55,9 @@ veri=pd.DataFrame({"Tarih":tarih,"ID":urunid,"Ürün Ad":urunad,"Fiyat":urunfiya
                    "Ürün Ana Kategori":urunanakategori,"Ürün Alt Kategori":urunaltketegori})
 veri=veri[~veri["Ürün Ad"].duplicated(keep=False)]
 veri.reset_index(inplace=True,drop=True)
-veri.to_excel("Migros/MigrosFiyat.xlsx",index=False)
+
+klasoryolu=f"Fiyatlar/{tarih}"
+os.makedirs(klasoryolu,exist_ok=True)
+
+dosyayolu=os.path.join(klasoryolu,"MigrosFiyat.xlsx")
+veri.to_excel(dosyayolu,index=False)

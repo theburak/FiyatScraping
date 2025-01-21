@@ -25,43 +25,31 @@ def sayfasayısı(url):
     return r.json()["page"]["totalPages"]
 
 def veri_cek(url):
-    local_urunid=[]
-    local_urunad=[]
-    local_urunfiyat=[]
-    local_urunanakategori=[]
-    local_urunaltketegori=[]
-    
-    scraper=cloudscraper.CloudScraper()
-    r=scraper.get(url,headers=headers)
-    item_sayisi=len(r.json().get("results"))
-    
-    for k in range(0,item_sayisi):
-        local_urunid.append(r.json()["results"][k]["product"]["id"])
-        local_urunad.append(r.json()["results"][k]["product"]["name"])
-        local_urunfiyat.append(r.json()["results"][k]["prices"]["original"]["value"])
-        local_urunanakategori.append(r.json()["results"][k]["sku"]["breadCrumbs"][1]["label"])
-        local_urunaltketegori.append(r.json()["results"][k]["sku"]["breadCrumbs"][2]["label"])
-    
-    return local_urunid,local_urunad,local_urunfiyat,local_urunanakategori,local_urunaltketegori
+    scraper = cloudscraper.CloudScraper()
+    r = scraper.get(url, headers=headers)
+    results = r.json().get("results", [])
+
+    local_urunid = [result["product"]["id"] for result in results]
+    local_urunad = [result["product"]["name"] for result in results]
+    local_urunfiyat = [result["prices"]["original"]["value"] for result in results]
+    local_urunanakategori = [result["sku"]["breadCrumbs"][1]["label"] for result in results]
+    local_urunaltketegori = [result["sku"]["breadCrumbs"][2]["label"] for result in results]
+
+    return local_urunid, local_urunad, local_urunfiyat, local_urunanakategori, local_urunaltketegori
 
 with open("SokMarket/SokLinks.txt","r",encoding="utf-8") as dosya:
     linkler=dosya.readlines()
     temizlinkler=[link.strip() for link in linkler if link.strip()]
 
 with ThreadPoolExecutor() as executor:
-    futures=[]
-    for i in temizlinkler:
-        ss=int(sayfasayısı(i))
-        for j in range(0,ss):
-            parsed_url=urlparse(i)
-            query_params=parse_qs(parsed_url.query)
-            query_params["page"]=[str(j)]
-            updated_query=urlencode(query_params, doseq=True)
-            url="https://www.sokmarket.com.tr/api/v1/search?"+updated_query
-            futures.append(executor.submit(veri_cek,url))
-    
+    futures = [
+        executor.submit(veri_cek, f"https://www.sokmarket.com.tr/api/v1/search?{urlencode({**parse_qs(urlparse(i).query), 'page': [str(j)]}, doseq=True)}")
+        for i in temizlinkler
+        for j in range(sayfasayısı(i))
+    ]
+
     for future in as_completed(futures):
-        local_urunid,local_urunad,local_urunfiyat,local_urunanakategori,local_urunaltketegori=future.result()
+        local_urunid, local_urunad, local_urunfiyat, local_urunanakategori, local_urunaltketegori = future.result()
         urunid.extend(local_urunid)
         urunad.extend(local_urunad)
         urunfiyat.extend(local_urunfiyat)

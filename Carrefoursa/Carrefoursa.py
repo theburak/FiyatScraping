@@ -8,6 +8,11 @@ import time
 from datetime import datetime
 import os
 
+# Configure WebDriver with specific version
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager(version="122.0.6261.70").install())
+)
+
 chrome_options=Options()
 chrome_options.add_argument("--headless")
 service=Service(ChromeDriverManager().install())
